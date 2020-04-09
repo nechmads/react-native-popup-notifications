@@ -2,7 +2,14 @@
 
 Highly customizable UI library to show toast style notifications in React Native.
 
+#### Note: V2 and above is using react-native-animatable for all animations. If you want a version that has no dependencies checkout V1 tag.
+
 ## Installation
+
+V2 has a two dependencies, make sure you install them first:
+https://github.com/react-native-community/react-native-device-info
+
+https://github.com/oblador/react-native-vector-icons#installation
 
 ```bash
 yarn add react-native-popup-notifications
@@ -119,6 +126,20 @@ This compoenent represrnt the container of one notification. It manages the styl
 #### PUNContentText
 
 This compoenent manages the actual content that will be displayed in the notification. It's a simple text compoenent, but you can easily create your own content compoenents.
+
+## Animations
+
+V2 is using react-native-animatable to control all animations.
+PUNNotification as well as the helper methods in the api receive 4 properties you can control animation type and duration with:
+
+- entranceAnimationType
+- entranceAnimationDuration
+- exitAnimationType
+- exitAnimationDuration
+
+If you don't specify any or some of them, the notification will use the default animations of fade in and fade out with duration of 1000 miliseconds.
+
+To see which animations you can use and what type you need to pass in, check out the react-native-animatable project at: https://github.com/oblador/react-native-animatable
 
 ## Example project
 
