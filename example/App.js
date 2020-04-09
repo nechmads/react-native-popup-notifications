@@ -13,23 +13,21 @@ import {
   ScrollView,
   StatusBar,
   Button,
+  Alert,
 } from 'react-native';
 
 import {
   PUNNotification,
   PUNContainer,
-  PUNContext,
-  PUNProvider,
   PUNContentText,
+  PUNProvider,
+  PUNContext,
   NOTIFICATIONS_POSITION,
-  ANIMATION_TYPES,
 } from 'react-native-popup-notifications';
 
 function showDeclarativeNotification(showFunction) {
   const notification = (
-    <PUNNotification
-      disappearAutomaticallyAfter={0}
-      animationType={ANIMATION_TYPES.STRECH_IN}>
+    <PUNNotification disappearAutomaticallyAfter={0}>
       <PUNContentText>
         {'Click on this notification to remove it'}
         {'\n'}
@@ -44,9 +42,7 @@ function showDeclarativeNotification(showFunction) {
 
 function showAutoDisappearNotification(showFunction) {
   const notification = (
-    <PUNNotification
-      disappearAutomaticallyAfter={2000}
-      animationType={ANIMATION_TYPES.STRECH_IN}>
+    <PUNNotification disappearAutomaticallyAfter={2000}>
       <PUNContentText>
         {'This notification will disappear automatially after 2 seconds'}
       </PUNContentText>
@@ -59,7 +55,6 @@ function showNotificationWhileOverridingStyle(showFunction) {
   const notification = (
     <PUNNotification
       disappearAutomaticallyAfter={0}
-      animationType={ANIMATION_TYPES.STRECH_IN}
       containerWidth="100%"
       style={{
         backgroundColor: 'pink',
@@ -85,9 +80,7 @@ function showNotificationWhileOverridingStyle(showFunction) {
 
 function showFadeInNotification(showFunction) {
   const notification = (
-    <PUNNotification
-      disappearAutomaticallyAfter={0}
-      animationType={ANIMATION_TYPES.FADE_IN}>
+    <PUNNotification disappearAutomaticallyAfter={0}>
       <PUNContentText>
         {'Click on this notification to remove it'}
         {'\n'}
@@ -105,6 +98,7 @@ const App = () => {
     showNotificationElement,
     showRoundedTextNotification,
     showMaterialStyleTextNotification,
+    showNotification,
   } = useContext(PUNContext);
 
   return (
@@ -137,25 +131,60 @@ const App = () => {
           <Button
             title="Show Rounded Notification Method"
             onPress={() => {
-              showRoundedTextNotification(
-                'Use a helper method to show a notification with default style',
-              );
+              showRoundedTextNotification({
+                text:
+                  'Use a helper method to show a notification with default style',
+              });
             }}
           />
 
           <Button
             title="Show Material Style Notification Method"
             onPress={() => {
-              showMaterialStyleTextNotification(
-                'Use a helper method to show a material style notification',
-              );
+              showMaterialStyleTextNotification({
+                text:
+                  'Use a helper method to show a material style notification',
+              });
             }}
           />
 
           <Button
-            title="Show Fade In Notification"
+            title="Show Different Animation Notification"
             onPress={() => {
               showFadeInNotification(showNotificationElement);
+            }}
+          />
+
+          <Button
+            title="Using generic showNotification method"
+            onPress={() => {
+              showNotification({
+                text: 'This is a customized text notification',
+                autoDisappearTime: 2000,
+                entranceAnimationType: 'bounceInDown',
+                entranceAnimationDuration: 1300,
+                exitAnimationType: 'bounceOutUp',
+                exitAnimationDuration: 800,
+                width: '90%',
+                style: {backgroundColor: 'red'},
+                textStyle: {color: '#000'},
+              });
+            }}
+          />
+          <Button
+            title="Custom notification UI"
+            onPress={() => {
+              const customUI = (
+                <Button
+                  title="Example button inside notifcation"
+                  onPress={() => Alert.alert('Button is working')}
+                />
+              );
+              showNotification({
+                autoDisappearTime: 5000,
+                width: '90%',
+                notificationUI: customUI,
+              });
             }}
           />
         </ScrollView>

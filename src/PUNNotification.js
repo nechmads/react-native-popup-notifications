@@ -1,15 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, Animated, StyleSheet, TouchableHighlight } from "react-native"
+import { Dimensions, StyleSheet, TouchableWithoutFeedback } from "react-native"
+
+import * as Animatable from "react-native-animatable"
 
 const DEFAULT_NOTIFICATION_WIDTH = Dimensions.get("window").width * 0.9
-
-/**
- * List of all animation types we support
- */
-export const ANIMATION_TYPES = {
-	STRECH_IN: "STRECH_IN",
-	FADE_IN: "FADE_IN",
-}
 
 /**
  * Calculates the notification width based on default or user provided style prop
@@ -31,6 +25,7 @@ function calculateNotificationWidth(containerWidth) {
 
 	return notificationWidth
 }
+
 /**
  * Represent a popup notification object
  * @param {boolean} display Dictates if the notification should be displayed. Default to true
@@ -40,8 +35,10 @@ function calculateNotificationWidth(containerWidth) {
  */
 const PUNNotification = ({
 	children,
-	display = true,
-	animationType = ANIMATION_TYPES.STRECH_IN,
+	entranceAnimationType = "fadeIn",
+	entranceAnimationDuration = 1000,
+	exitAnimationType = "fadeOut",
+	exitAnimationDuration = 1000,
 	disappearAutomaticallyAfter = 0,
 	containerWidth,
 	style,
@@ -52,50 +49,15 @@ const PUNNotification = ({
 		disappearAutomaticallyAfter > 0
 	)
 
-	const width = useRef(new Animated.Value(0)).current
-	const opacity = useRef(new Animated.Value(0)).current
+	const viewRef = useRef(null)
+	const notificationWidth = calculateNotificationWidth(containerWidth)
 
 	// This effect controls the start of the animations
 	useEffect(() => {
-		if (display) {
-			const notificationWidth = calculateNotificationWidth(containerWidth)
+		viewRef.current.animate(entranceAnimationType, entranceAnimationDuration)
 
-			switch (animationType) {
-				case ANIMATION_TYPES.STRECH_IN:
-					Animated.parallel([
-						Animated.spring(width, {
-							toValue: notificationWidth,
-							tension: 80,
-							useNativeDriver: false,
-						}),
-						Animated.timing(opacity, {
-							toValue: 0.7,
-							duration: 1000,
-							useNativeDriver: false,
-						}),
-					]).start()
-
-					break
-
-				case ANIMATION_TYPES.FADE_IN:
-					Animated.parallel([
-						Animated.timing(width, {
-							toValue: notificationWidth,
-							duration: 1,
-							useNativeDriver: false,
-						}),
-						Animated.timing(opacity, {
-							toValue: 0.7,
-							duration: 1000,
-							useNativeDriver: false,
-						}),
-					]).start()
-
-					break
-			}
-		}
 		return () => {}
-	}, [animationType, containerWidth, display, opacity, style, width])
+	}, [entranceAnimationType, entranceAnimationDuration])
 
 	// This effect controls the end of the animations
 	useEffect(() => {
@@ -104,58 +66,39 @@ const PUNNotification = ({
 		if (shouldDissapearAutoamtically) {
 			const delay = disappearAutomaticallyAfter === 0 ? 1 : disappearAutomaticallyAfter
 
-			switch (animationType) {
-				case ANIMATION_TYPES.STRECH_IN:
-					timer = setTimeout(() => {
-						Animated.timing(opacity, {
-							toValue: 0.0,
-							duration: 700,
-							useNativeDriver: false,
-						}).start(() => onDisappear())
-					}, delay)
-					break
-
-				case ANIMATION_TYPES.FADE_IN:
-					timer = setTimeout(() => {
-						Animated.timing(opacity, {
-							toValue: 0.0,
-							duration: 700,
-							useNativeDriver: false,
-						}).start(() => onDisappear())
-					}, delay)
-					break
-			}
+			timer = setTimeout(() => {
+				viewRef.current.animate(exitAnimationType, exitAnimationDuration).then(() => onDisappear())
+			}, delay)
 		}
 		return () => {
 			if (timer) {
 				clearTimeout(timer)
 			}
 		}
-	}, [animationType, disappearAutomaticallyAfter, onDisappear, opacity, shouldDissapearAutoamtically])
-
-	const buildAnimationStyle = () => {
-		return {
-			width: width,
-			opacity: opacity,
-			display: display ? "flex" : "none",
-		}
-	}
+	}, [
+		disappearAutomaticallyAfter,
+		exitAnimationDuration,
+		exitAnimationType,
+		onDisappear,
+		shouldDissapearAutoamtically,
+	])
 
 	const onPress = () => {
 		setShouldDissapearAutomatically(true)
 	}
 
 	return (
-		<Animated.View style={[styles.container, buildAnimationStyle(), style]} {...rest}>
-			<TouchableHighlight onPress={() => onPress()} style={styles.touchContainer}>
+		<Animatable.View ref={viewRef} style={[styles.container, { width: notificationWidth }, style]} {...rest}>
+			<TouchableWithoutFeedback onPress={() => onPress()} style={styles.touchContainer}>
 				{children}
-			</TouchableHighlight>
-		</Animated.View>
+			</TouchableWithoutFeedback>
+		</Animatable.View>
 	)
 }
 
 const styles = StyleSheet.create({
 	container: {
+		display: "flex",
 		backgroundColor: "#000",
 		borderRadius: 5,
 		padding: 10,
