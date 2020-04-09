@@ -1,0 +1,23 @@
+{
+	"name": "react-native-popup-notifications",
+	"version": "1.0.0",
+	"description": "UI Library to display in app toast style notifications",
+	"main": "build/index.js",
+	"scripts": {},
+	"keywords": [
+		"react native",
+		"notifications",
+		"toast",
+		"popup"
+	],
+	"author": "Shahar Nechmad",
+	"license": "ISC",
+	"dependencies": {},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-preset-latest": "^6.24.1",
+		"metro-react-native-babel-preset": "^0.59.0",
+		"np": "^6.2.0",
+		"watch": "^1.0.2"
+	}
+}
