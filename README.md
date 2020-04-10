@@ -127,6 +127,10 @@ This compoenent represrnt the container of one notification. It manages the styl
 
 This compoenent manages the actual content that will be displayed in the notification. It's a simple text compoenent, but you can easily create your own content compoenents.
 
+#### PUNContentIconText
+
+This compoenent manages the actual content that will be displayed in the notification. It's a simple compoenent to display a notification that is composed from an icon and text, but you can easily create your own content compoenents.
+
 ## Animations
 
 V2 is using react-native-animatable to control all animations.
@@ -141,9 +145,110 @@ If you don't specify any or some of them, the notification will use the default 
 
 To see which animations you can use and what type you need to pass in, check out the react-native-animatable project at: https://github.com/oblador/react-native-animatable
 
+## API and Helper methods
+
+The API exposes a few methods for you to use. Each methos accepts an object with multiple parameters. Most of them have some default values, allowing you to customize the result of the method call.
+
+```javascript
+// Use this method to show a PUNNotification or your own custom notification element
+addNotificationElement(notificationElement)
+```
+
+```javascript
+// Use this method to show a notification with rounded edges and some default styles
+showRoundedTextNotification({
+    text,
+    backgroundColor = '#000',
+    color = '#FFF',
+    autoDisappearTime = 3000,
+    ...rest
+  })
+```
+
+```javascript
+// Use this method to show a flat Material style notification
+showMaterialStyleTextNotification({
+    text,
+    backgroundColor = '#000',
+    color = '#FFF',
+    autoDisappearTime = 3000,
+    ...rest
+  })
+```
+
+```javascript
+// Use this method to show a styled information message
+showInfoNotification = ({
+    text,
+    backgroundColor = '#38908F',
+    color = '#fff',
+    autoDisappearTime = 3000,
+    entranceAnimationType = 'bounceInDown',
+    exitAnimationType = 'bounceOutUp',
+  }
+```
+
+```javascript
+// Use this method to show a styled error message
+showErrorNotification = ({
+    text,
+    backgroundColor = '#c70039',
+    color = '#fff',
+    autoDisappearTime = 3000,
+    entranceAnimationType = 'bounceInDown',
+    exitAnimationType = 'bounceOutUp',
+  })
+```
+
+```javascript
+// Use this method to show a styled warning message
+showWarningNotification = ({
+    text,
+    backgroundColor = '#ffcc00',
+    color = '#fff',
+    autoDisappearTime = 3000,
+    entranceAnimationType = 'bounceInDown',
+    exitAnimationType = 'bounceOutUp',
+  }
+```
+
+```javascript
+// Use this method to show your own customized text based notification
+showNotification = ({
+    text,
+    style = {},
+    width = '100%',
+    autoDisappearTime = 3000,
+    entranceAnimationType = 'fadeIn',
+    entranceAnimationDuration = 1000,
+    exitAnimationType = 'fadeOut',
+    exitAnimationDuration = 1000,
+    notificationUI,
+    textStyle = {},
+    ...rest
+  }
+```
+
+```javascript
+// Use this method to show your own customized text and icon based notification
+showIconNotification = ({
+		text,
+		style = {},
+		width = "100%",
+		autoDisappearTime = 3000,
+		entranceAnimationType = "fadeIn",
+		entranceAnimationDuration = 1000,
+		exitAnimationType = "fadeOut",
+		exitAnimationDuration = 1000,
+		color = "#fff",
+		textStyle = {},
+		...rest
+	})
+```
+
 ## Example project
 
-Check out the example project for multiple examples on how to show notifications in different ways including fully customizing their loon and feel.
+Check out the example project for multiple examples on how to show notifications in different ways including fully customizing their look and feel.
 
 ## Contact me
 

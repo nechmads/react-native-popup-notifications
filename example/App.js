@@ -22,6 +22,7 @@ import {
   PUNContentText,
   PUNProvider,
   PUNContext,
+  PUNContentIconText,
   NOTIFICATIONS_POSITION,
 } from 'react-native-popup-notifications';
 
@@ -93,12 +94,39 @@ function showFadeInNotification(showFunction) {
   showFunction(notification);
 }
 
+function showCustomIconAndTextNotification(showFunction) {
+  const notification = (
+    <PUNNotification
+      disappearAutomaticallyAfter={0}
+      style={{backgroundColor: 'blue'}}>
+      <PUNContentIconText
+        iconType="entypo"
+        iconName="info"
+        iconStyle={{color: '#fff'}}
+        textStyle={{color: 'red'}}>
+        {'This is a notification'}
+        {'\n'}
+        {'With an icon'}
+        {'\n'}
+        {'And multiple lines of text'}
+        {'\n'}
+        {'And some custom styles'}
+      </PUNContentIconText>
+    </PUNNotification>
+  );
+
+  showFunction(notification);
+}
+
 const App = () => {
   const {
     showNotificationElement,
     showRoundedTextNotification,
     showMaterialStyleTextNotification,
     showNotification,
+    showInfoNotification,
+    showErrorNotification,
+    showWarningNotification,
   } = useContext(PUNContext);
 
   return (
@@ -184,6 +212,40 @@ const App = () => {
                 autoDisappearTime: 5000,
                 width: '90%',
                 notificationUI: customUI,
+              });
+            }}
+          />
+          <Button
+            title="Custom icon and text notification"
+            onPress={() => {
+              showCustomIconAndTextNotification(showNotificationElement);
+            }}
+          />
+
+          <Button
+            title="Show info message"
+            onPress={() => {
+              showInfoNotification({
+                text: 'This notification is just for your information',
+              });
+            }}
+          />
+
+          <Button
+            title="Show error message"
+            onPress={() => {
+              showErrorNotification({
+                text: 'Oh no. Something went worng. Please try again later',
+              });
+            }}
+          />
+
+          <Button
+            title="Show warning message"
+            onPress={() => {
+              showWarningNotification({
+                text:
+                  'This is just a warning that something might not be working right',
               });
             }}
           />

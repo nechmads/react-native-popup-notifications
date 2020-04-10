@@ -1,29 +1,37 @@
-import React, { useEffect, useRef, useState } from "react"
-import { Dimensions, StyleSheet, TouchableWithoutFeedback } from "react-native"
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
-import * as Animatable from "react-native-animatable"
+import * as Animatable from 'react-native-animatable';
 
-const DEFAULT_NOTIFICATION_WIDTH = Dimensions.get("window").width * 0.9
+const DEFAULT_NOTIFICATION_WIDTH = Dimensions.get('window').width * 0.9;
 
 /**
  * Calculates the notification width based on default or user provided style prop
  * @param {object} containerWidth The width was passed to the notification or null
  */
 function calculateNotificationWidth(containerWidth) {
-	let notificationWidth = DEFAULT_NOTIFICATION_WIDTH
+  let notificationWidth = DEFAULT_NOTIFICATION_WIDTH;
 
-	// If we were provided a style prop and a width style in it
-	if (containerWidth) {
-		// If the provided value is in percantage
-		if (isNaN(containerWidth) && containerWidth.includes("%")) {
-			notificationWidth = (Dimensions.get("window").width * parseInt(containerWidth.replace("%", ""))) / 100
-		} else {
-			// Provided value was as a number
-			notificationWidth = containerWidth
-		}
-	}
+  // If we were provided a style prop and a width style in it
+  if (containerWidth) {
+    // If the provided value is in percantage
+    if (isNaN(containerWidth) && containerWidth.includes('%')) {
+      notificationWidth =
+        (Dimensions.get('window').width *
+          parseInt(containerWidth.replace('%', ''))) /
+        100;
+    } else {
+      // Provided value was as a number
+      notificationWidth = containerWidth;
+    }
+  }
 
-	return notificationWidth
+  return notificationWidth;
 }
 
 /**
@@ -34,81 +42,88 @@ function calculateNotificationWidth(containerWidth) {
  * @param {object} style Add or modify styles for this notification
  */
 const PUNNotification = ({
-	children,
-	entranceAnimationType = "fadeIn",
-	entranceAnimationDuration = 1000,
-	exitAnimationType = "fadeOut",
-	exitAnimationDuration = 1000,
-	disappearAutomaticallyAfter = 0,
-	containerWidth,
-	style,
-	onDisappear,
-	...rest
+  children,
+  entranceAnimationType = 'fadeIn',
+  entranceAnimationDuration = 1000,
+  exitAnimationType = 'fadeOut',
+  exitAnimationDuration = 1000,
+  disappearAutomaticallyAfter = 0,
+  containerWidth,
+  style,
+  onDisappear,
+  ...rest
 }) => {
-	const [shouldDissapearAutoamtically, setShouldDissapearAutomatically] = useState(
-		disappearAutomaticallyAfter > 0
-	)
+  const [
+    shouldDissapearAutoamtically,
+    setShouldDissapearAutomatically,
+  ] = useState(disappearAutomaticallyAfter > 0);
 
-	const viewRef = useRef(null)
-	const notificationWidth = calculateNotificationWidth(containerWidth)
+  const viewRef = useRef(null);
+  const notificationWidth = calculateNotificationWidth(containerWidth);
 
-	// This effect controls the start of the animations
-	useEffect(() => {
-		viewRef.current.animate(entranceAnimationType, entranceAnimationDuration)
+  // This effect controls the start of the animations
+  useEffect(() => {
+    viewRef.current.animate(entranceAnimationType, entranceAnimationDuration);
 
-		return () => {}
-	}, [entranceAnimationType, entranceAnimationDuration])
+    return () => {};
+  }, [entranceAnimationType, entranceAnimationDuration]);
 
-	// This effect controls the end of the animations
-	useEffect(() => {
-		let timer = null
+  // This effect controls the end of the animations
+  useEffect(() => {
+    let timer = null;
 
-		if (shouldDissapearAutoamtically) {
-			const delay = disappearAutomaticallyAfter === 0 ? 1 : disappearAutomaticallyAfter
+    if (shouldDissapearAutoamtically) {
+      const delay =
+        disappearAutomaticallyAfter === 0 ? 1 : disappearAutomaticallyAfter;
 
-			timer = setTimeout(() => {
-				viewRef.current.animate(exitAnimationType, exitAnimationDuration).then(() => onDisappear())
-			}, delay)
-		}
-		return () => {
-			if (timer) {
-				clearTimeout(timer)
-			}
-		}
-	}, [
-		disappearAutomaticallyAfter,
-		exitAnimationDuration,
-		exitAnimationType,
-		onDisappear,
-		shouldDissapearAutoamtically,
-	])
+      timer = setTimeout(() => {
+        viewRef.current
+          .animate(exitAnimationType, exitAnimationDuration)
+          .then(() => onDisappear());
+      }, delay);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [
+    disappearAutomaticallyAfter,
+    exitAnimationDuration,
+    exitAnimationType,
+    onDisappear,
+    shouldDissapearAutoamtically,
+  ]);
 
-	const onPress = () => {
-		setShouldDissapearAutomatically(true)
-	}
+  const onPress = () => {
+    setShouldDissapearAutomatically(true);
+  };
 
-	return (
-		<Animatable.View ref={viewRef} style={[styles.container, { width: notificationWidth }, style]} {...rest}>
-			<TouchableWithoutFeedback onPress={() => onPress()} style={styles.touchContainer}>
-				{children}
-			</TouchableWithoutFeedback>
-		</Animatable.View>
-	)
-}
+  return (
+    <Animatable.View
+      ref={viewRef}
+      style={[styles.container, {width: notificationWidth}, style]}
+      {...rest}>
+      <TouchableWithoutFeedback onPress={() => onPress()}>
+        <View style={styles.touchContainer}>{children}</View>
+      </TouchableWithoutFeedback>
+    </Animatable.View>
+  );
+};
 
 const styles = StyleSheet.create({
-	container: {
-		display: "flex",
-		backgroundColor: "#000",
-		borderRadius: 5,
-		padding: 10,
-		marginVertical: 5,
-	},
+  container: {
+    display: 'flex',
+    backgroundColor: '#000',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+    paddingRight: 10,
+  },
 
-	touchContainer: {
-		width: "100%",
-		minHeight: 50,
-	},
-})
+  touchContainer: {
+    width: '100%',
+  },
+});
 
-export default PUNNotification
+export default PUNNotification;

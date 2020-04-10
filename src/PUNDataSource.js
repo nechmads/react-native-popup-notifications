@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react"
 import PUNNotification from "./PUNNotification"
 import PUNContentText from "./PUNContentText"
+import PUNContentIconText from "./PUNContentIconText"
 
 const PUNContext = React.createContext([])
 
@@ -29,6 +30,7 @@ export function PUNProvider({ children }) {
 			},
 		})
 
+		console.log(clonedNotification)
 		setNotifications([...notifications, clonedNotification])
 	}
 
@@ -88,6 +90,105 @@ export function PUNProvider({ children }) {
 		addNotificationElement(notification)
 	}
 
+	const showInfoNotification = ({
+		text,
+		backgroundColor = "#38908F",
+		color = "#fff",
+		autoDisappearTime = 3000,
+		entranceAnimationType = "bounceInDown",
+		exitAnimationType = "bounceOutUp",
+	}) => {
+		const notification = (
+			<PUNNotification
+				disappearAutomaticallyAfter={autoDisappearTime}
+				containerWidth="100%"
+				style={{
+					borderRadius: 0,
+					backgroundColor: backgroundColor,
+				}}
+				entranceAnimationType={entranceAnimationType}
+				exitAnimationType={exitAnimationType}
+			>
+				<PUNContentIconText
+					iconType="entypo"
+					iconName="info"
+					iconStyle={{ color: color }}
+					textStyle={{ color: color, fontSize: 20 }}
+				>
+					{text}
+				</PUNContentIconText>
+			</PUNNotification>
+		)
+
+		addNotificationElement(notification)
+	}
+
+	const showErrorNotification = ({
+		text,
+		backgroundColor = "#c70039",
+		color = "#fff",
+		autoDisappearTime = 3000,
+		entranceAnimationType = "bounceInDown",
+		exitAnimationType = "bounceOutUp",
+	}) => {
+		const notification = (
+			<PUNNotification
+				disappearAutomaticallyAfter={autoDisappearTime}
+				containerWidth="100%"
+				style={{
+					borderRadius: 0,
+					backgroundColor: backgroundColor,
+				}}
+				entranceAnimationType={entranceAnimationType}
+				exitAnimationType={exitAnimationType}
+			>
+				<PUNContentIconText
+					iconType="entypo"
+					iconName="info"
+					iconStyle={{ color: color }}
+					textStyle={{ color: color, fontSize: 20 }}
+				>
+					{text}
+				</PUNContentIconText>
+			</PUNNotification>
+		)
+
+		addNotificationElement(notification)
+	}
+
+	const showWarningNotification = ({
+		text,
+		backgroundColor = "#ffcc00",
+		color = "#fff",
+		autoDisappearTime = 3000,
+		entranceAnimationType = "bounceInDown",
+		exitAnimationType = "bounceOutUp",
+	}) => {
+		const notification = (
+			<PUNNotification
+				disappearAutomaticallyAfter={autoDisappearTime}
+				containerWidth="100%"
+				style={{
+					borderRadius: 0,
+					backgroundColor: backgroundColor,
+				}}
+				entranceAnimationType={entranceAnimationType}
+				exitAnimationType={exitAnimationType}
+			>
+				<PUNContentIconText
+					iconType="entypo"
+					iconName="info"
+					iconStyle={{ color: color }}
+					textStyle={{ color: color, fontSize: 20 }}
+				>
+					{text}
+				</PUNContentIconText>
+			</PUNNotification>
+		)
+
+		addNotificationElement(notification)
+	}
+
 	const showNotification = ({
 		text,
 		style = {},
@@ -119,6 +220,44 @@ export function PUNProvider({ children }) {
 		addNotificationElement(notification)
 	}
 
+	const showIconNotification = ({
+		text,
+		style = {},
+		width = "100%",
+		autoDisappearTime = 3000,
+		entranceAnimationType = "fadeIn",
+		entranceAnimationDuration = 1000,
+		exitAnimationType = "fadeOut",
+		exitAnimationDuration = 1000,
+		color = "#fff",
+		textStyle = {},
+		...rest
+	}) => {
+		const notification = (
+			<PUNNotification
+				containerWidth={width}
+				style={style}
+				entranceAnimationType={entranceAnimationType}
+				entranceAnimationDuration={entranceAnimationDuration}
+				exitAnimationType={exitAnimationType}
+				exitAnimationDuration={exitAnimationDuration}
+				disappearAutomaticallyAfter={autoDisappearTime}
+				{...rest}
+			>
+				<PUNContentIconText
+					iconType="entypo"
+					iconName="info"
+					iconStyle={{ color: color }}
+					textStyle={[{ color: color }, { textStyle }]}
+				>
+					{text}
+				</PUNContentIconText>
+			</PUNNotification>
+		)
+
+		addNotificationElement(notification)
+	}
+
 	return (
 		<PUNContext.Provider
 			value={{
@@ -128,6 +267,10 @@ export function PUNProvider({ children }) {
 				showRoundedTextNotification: showRoundedTextNotification,
 				showMaterialStyleTextNotification: showMaterialStyleTextNotification,
 				showNotification: showNotification,
+				showInfoNotification: showInfoNotification,
+				showErrorNotification: showErrorNotification,
+				showWarningNotification: showWarningNotification,
+				showIconNotification: showIconNotification,
 			}}
 			children={children}
 		/>
