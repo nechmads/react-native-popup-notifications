@@ -30,7 +30,6 @@ export function PUNProvider({ children }) {
 			},
 		})
 
-		console.log(clonedNotification)
 		setNotifications([...notifications, clonedNotification])
 	}
 
