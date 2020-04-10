@@ -47,6 +47,15 @@ const getIconType = type => {
   }
 };
 
+/**
+ * An Icon to display inside a notification. This compoenent is using icons from the react-native-vector-icons package
+ * @param {object} props
+ * @param {string} [props.type] The icon pack to get the icon from
+ * @param {string} [props.name] The name of the icon to display
+ * @param {number} [props.size] The size of the icon
+ * @param {string} [props.color] The color of the icon
+ * @param {object} [props.style] Additional styles to attach to the icon
+ **/
 const Icon = ({type, name, size, color, style, ...rest}) => {
   const IconComponent = getIconType(type);
 

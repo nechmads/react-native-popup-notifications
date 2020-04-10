@@ -23,7 +23,7 @@ function calculateNotificationWidth(containerWidth) {
     if (isNaN(containerWidth) && containerWidth.includes('%')) {
       notificationWidth =
         (Dimensions.get('window').width *
-          parseInt(containerWidth.replace('%', ''))) /
+          parseInt(containerWidth.replace('%', ''), 10)) /
         100;
     } else {
       // Provided value was as a number
@@ -36,10 +36,16 @@ function calculateNotificationWidth(containerWidth) {
 
 /**
  * Represent a popup notification object
- * @param {boolean} display Dictates if the notification should be displayed. Default to true
- * @param {string} animationType The type of animation we want to use for this notification
- * @param {integer} disappearAutomaticallyAfter Dictates after how many miliseconds the notification will automatically disappear. Default is 0 which means the notification will not disappear automatically
- * @param {object} style Add or modify styles for this notification
+ * @param {object} props
+ * @param {JSX.Element} [props.children]
+ * @param {string} [props.entranceAnimationType] The type of animation to be used when showing the notification. Default to fadeIn animation
+ * @param {number} [props.entranceAnimationDuration] the duration of the entrance animation. Default to 1 seocnd
+ * @param {string} [props.exitAnimationType] The type of animation to be used when hiding the notification. Defaults to fadeOut animation.
+ * @param {number} [props.exitAnimationDuration] The duration of the exit animation. Default to 1 second.
+ * @param {number} [props.disappearAutomaticallyAfter] The number of milliseconds after which the notification will auto disappear. 0 means it will stay until the user press it. Default to 0.
+ * @param {number|string} [props.containerWidth] The width of the notification. You can pass a number or a percantage string like '80%
+ * @param {object} [props.style] Additional style allowing you to override or modify current notification style
+ * @param {function} [props.onDisappear] For internal use only. Do not set this parameter.
  */
 const PUNNotification = ({
   children,

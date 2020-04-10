@@ -11,9 +11,11 @@ export const NOTIFICATIONS_POSITION = {
 /**
  * The container element for all notifications. Add this element to the top of your app once
  * compose it in your render method
- * @param {string} position Decide where to show notifications on the screen (top or bottom)
- * @param {object} style Used to add or change any styles for this container
- */
+ * @param {object} props
+ * @param {JSX.Element} [props.children]
+ * @param {object} [props.style] Additional styles to override or modify the container style
+ * @param {string} [props.position] Determine where in the screen the notification will be displayed. Possible values are top or bottom
+ **/
 const PUNContainer = ({
   children,
   style,
@@ -26,8 +28,6 @@ const PUNContainer = ({
     return null;
   }
 
-  // Decide if we should be displayed based on wether we have any notifications or not
-  const shouldDisplay = notifications.length > 0 ? 'flex' : 'none';
   const paddingVertical = DeviceInfo.hasNotch() ? 50 : 20;
 
   // Manage the style for showing notifications from the top ot bottom of the screen
@@ -39,7 +39,6 @@ const PUNContainer = ({
   return (
     <View
       pointerEvents="box-none"
-      display={shouldDisplay}
       style={[
         styles.container,
         {
